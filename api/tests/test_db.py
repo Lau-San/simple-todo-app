@@ -19,8 +19,8 @@ def test_get_close_db(app: Flask):
     assert 'closed' in str(e.value)
 
 
-def test_init_db_command(runner: FlaskCliRunner, monkeypatch: pytest.MonkeyPatch):
-    class Recorder(object):
+def test_init_db_command(runner: FlaskCliRunner, monkeypatch: MonkeyPatch):
+    class Recorder():
         called = False
 
     def fake_init_db():

@@ -1,8 +1,5 @@
-import pytest
-
-from flask import g, session, Flask
+from flask import Flask
 from flask.testing import FlaskClient
-from pytodo.db import get_db
 
 
 def test_get_users(client: FlaskClient, app: Flask):
