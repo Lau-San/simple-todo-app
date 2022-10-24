@@ -87,10 +87,11 @@ def get_user_by_id(user_id: int):
         response.status_code = 404
         return response
 
-    response = dict()
-    response['id'] = result[0]
-    response['username'] = result[1]
-    response['password'] = result[2]
+    response = {
+        'id': result[0],
+        'username': result[1],
+        'password': result[2]
+    }
 
     response = jsonify(response)
     return response
