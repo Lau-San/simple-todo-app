@@ -34,7 +34,7 @@ def add_user():
     # Check that data is not empty
     if not data:
         response = jsonify({
-            'message': 'Where\'s my user data?'
+            'message': 'No user data'
         })
         response.status_code = 400
         return response
@@ -45,7 +45,7 @@ def add_user():
         password = data['password']
     except KeyError:
         response = jsonify({
-            'message': 'You probably forgot to send a username or a password',
+            'message': 'Not enough user data',
         })
         response.status_code = 400
         return response
