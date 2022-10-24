@@ -22,9 +22,11 @@ jobs:
         python-version: "3.8.10"
     - name: Install dependencies
       run: |
+        cd api
         python -m pip install --upgrade pip
         pip install pytest
-        if [ -f api/requirements.txt ]; then pip install -r api/requirements.txt; fi
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install -e .
 #     - name: Lint with flake8
 #       run: |
 #         # stop the build if there are Python syntax errors or undefined names
