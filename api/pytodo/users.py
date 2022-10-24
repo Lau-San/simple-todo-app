@@ -1,4 +1,3 @@
-from psycopg2.errors import UniqueViolation
 from flask import Blueprint, jsonify, request, make_response
 from .db import get_db
 

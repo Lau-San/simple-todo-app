@@ -1,5 +1,5 @@
 from pytodo import create_app
-from flask.testing import FlaskClient
+# from flask.testing import FlaskClient
 
 
 def test_config():
