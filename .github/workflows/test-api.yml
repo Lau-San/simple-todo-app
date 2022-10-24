@@ -35,10 +35,10 @@ jobs:
 #         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test Factory
       run: |
-        pytest -vv tests/test_factory.py
+        pytest -vv api/tests/test_factory.py
     - name: Test Database
       run: |
-        pytest -vv tests/test_db.py
+        pytest -vv api/tests/test_db.py
     - name: Test Users
       run: |
-        pytest -vv tests/test_users.py
+        pytest -vv api/tests/test_users.py
