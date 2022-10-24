@@ -1,3 +1,4 @@
+from typing import Union, Any
 from flask import Blueprint, jsonify, request, make_response
 from .db import get_db
 
@@ -75,23 +76,34 @@ def add_user():
 
 @bp.route('/<int:user_id>')
 def get_user_by_id(user_id: int):
-    db = get_db()
-    with db.cursor() as cur:
-        cur.execute('SELECT * FROM users WHERE id = %s', (user_id,))
-        result = cur.fetchone()
+    exists, user = get_user_data(user_id)
 
-    if not result:
+    if not user:
         response = jsonify({
             'message': "User doesn't exist"
         })
         response.status_code = 404
         return response
 
-    response = {
-        'id': result[0],
-        'username': result[1],
-        'password': result[2]
+    response = jsonify(user)
+    return response
+
+
+def get_user_data(id: int) -> tuple[bool, Union[dict[str, Any], Any]]:
+    """Retrieve the user with the given id if it exists."""
+
+    db = get_db()
+    with db.cursor() as cur:
+        cur.execute('SELECT * FROM users WHERE id = %s', (id,))
+        search = cur.fetchone()
+
+    if not search:
+        return (False, None)
+
+    user = {
+        'id': search[0],
+        'username': search[1],
+        'password': search[2]
     }
 
-    response = jsonify(response)
-    return response
+    return (True, user)
