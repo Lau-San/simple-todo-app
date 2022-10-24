@@ -11,7 +11,7 @@ def get_db():
         if os.getenv('DB_URL'):
             g.db = psycopg2.connect(
                 os.getenv('DB_URL'),
-                sslmode='require',
+                # sslmode='require',
                 cursor_factory=DictCursor,
             )
         else:
