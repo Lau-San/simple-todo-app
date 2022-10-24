@@ -71,3 +71,26 @@ def add_user():
         db.commit()
 
     return response
+
+
+@bp.route('/<int:user_id>')
+def get_user_by_id(user_id: int):
+    db = get_db()
+    with db.cursor() as cur:
+        cur.execute('SELECT * FROM users WHERE id = %s', (user_id,))
+        result = cur.fetchone()
+
+    if not result:
+        response = jsonify({
+            'message': "User doesn't exist"
+        })
+        response.status_code = 404
+        return response
+
+    response = dict()
+    response['id'] = result[0]
+    response['username'] = result[1]
+    response['password'] = result[2]
+
+    response = jsonify(response)
+    return response
