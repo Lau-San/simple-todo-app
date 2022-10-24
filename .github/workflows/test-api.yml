@@ -13,13 +13,41 @@ jobs:
   test:
 
     runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        # Docker Hub image
+        image: postgres:latest
+        
+        # service environment variables
+        # `POSTGRES_HOST` is `postgres`
+        env:
+          # optional (defaults to `postgres`)
+          POSTGRES_DB: simple-todo-app-test
+          # required
+          POSTGRES_PASSWORD: postgres
+          # optional (defaults to `5432`)
+          POSTGRES_PORT: 5432
+          # optional (defaults to `postgres`)
+          POSTGRES_USER: postgres
+        ports:
+          # maps tcp port 5432 on service container to the host
+          - 5432:5432
+        # set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
     - uses: actions/checkout@v3
+  
     - name: Set up Python 3.8.10
       uses: actions/setup-python@v3
       with:
         python-version: "3.8.10"
+    
     - name: Install dependencies
       run: |
         cd api
@@ -27,19 +55,11 @@ jobs:
         pip install pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install -e .
-#     - name: Lint with flake8
-#       run: |
-#         # stop the build if there are Python syntax errors or undefined names
-#         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-#         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-#         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-    - name: Setup PostgreSQL
-      uses: Harmon758/postgresql-action@v1.0.0
-    
-    - name: Create database
-      run: |
-        psql
+#     - name: Install PostgreSQL client
+#       run: |
+#           apt-get update
+#           apt-get install --yes postgresql-client
         
     - name: Test Factory
       run: |
