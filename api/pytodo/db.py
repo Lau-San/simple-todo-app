@@ -7,13 +7,20 @@ from flask import g, current_app, Flask
 
 def get_db():
     if 'db' not in g:
-        g.db = psycopg2.connect(
-            cursor_factory=DictCursor,
-            host=os.getenv('DB_HOST'),
-            dbname=current_app.config['DB_NAME'],
-            user=os.getenv('DB_USER'),
-            password=os.getenv('DB_PASSWORD')
-        )
+        if os.getenv('DB_URL'):
+            g.db = psycopg2.connect(
+                os.getenv('DB_URL'),
+                sslmode='require',
+                cursor_factory=DictCursor,
+            )
+        else:
+            g.db = psycopg2.connect(
+                cursor_factory=DictCursor,
+                host=os.getenv('DB_HOST'),
+                dbname=current_app.config['DB_NAME'],
+                user=os.getenv('DB_USER'),
+                password=os.getenv('DB_PASSWORD')
+            )
 
     return g.db
 

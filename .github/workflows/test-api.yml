@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 env:
-  DB_HOST: "postgres"
+  DB_URL: "postgres://postgres:postgres@postgres:5432/simple_todo_app_test"
 
 jobs:
   test:
