@@ -59,12 +59,6 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install -e .
 
-      - name: Test Factory
+      - name: Run tests
         run: |
-          pytest -vv api/tests/test_factory.py
-      - name: Test Database
-        run: |
-          pytest -vv api/tests/test_db.py
-      - name: Test Users
-        run: |
-          pytest -vv api/tests/test_users.py
+          pytest -vv

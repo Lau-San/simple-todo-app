@@ -21,7 +21,7 @@ def test_get_all_users(client: FlaskClient, app: Flask):
     ]
 
 
-def test_get_user_by_id(client: FlaskClient):
+def test_get_user_by_id_ok(client: FlaskClient):
     response = client.get('/api/users/1')
     assert response.status_code == 200
     assert response.json == {
@@ -30,4 +30,6 @@ def test_get_user_by_id(client: FlaskClient):
         'password': '$2b$10$5ysgXZUJi7MkJWhEhFcZTObGe18G1G.0rnXkewEtXq6ebVx1qpjYW'
     }
 
+
+def test_get_user_by_id_not_found(client: FlaskClient):
     assert client.get('/api/users/20').status_code == 404

@@ -49,8 +49,10 @@ def test_add_user_incomplete_data(client: FlaskClient, app: Flask):
         json={'password': 'Don\'t add me'}
     )
     assert response.status_code == 400
+
     if response.json:
         assert 'Not enough' in response.json['message']
+
     with app.app_context():
         db = get_db()
         cur = db.cursor()
