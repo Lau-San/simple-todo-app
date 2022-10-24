@@ -78,7 +78,7 @@ def add_user():
 def get_user_by_id(user_id: int):
     exists, user = get_user_data(user_id)
 
-    if not user:
+    if not exists:
         response = jsonify({
             'message': "User doesn't exist"
         })
