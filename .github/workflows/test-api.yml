@@ -34,15 +34,12 @@ jobs:
 #         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
 #         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-    - name: Setup Postgres CLI
-        # You may pin to the exact commit or the version.
-        # uses: akanieski/setup-postgres-cli@eb287d6c98df0083ba52519eee85781563cd8828
-      uses: akanieski/setup-postgres-cli@v0.1.2
-      with:
-        # Actions to take
-        commands: create database simple_todo_app;
-        # Password passed to postgres cli
-        password: postgres
+    - name: Setup PostgreSQL
+      uses: Harmon758/postgresql-action@v1.0.0
+    
+    - name: Create database
+      run: |
+        psql
         
     - name: Test Factory
       run: |
