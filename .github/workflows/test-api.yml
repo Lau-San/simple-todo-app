@@ -47,6 +47,7 @@ jobs:
         
     - name: Create test database
       run: |
+        ls /var/run/postgresql
         psql -c 'CREATE DATABASE simple-todo-app-test;'
         
     - name: Test Factory
