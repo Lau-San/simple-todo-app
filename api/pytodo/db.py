@@ -7,6 +7,7 @@ from flask import g, current_app, Flask
 
 def get_db():
     if 'db' not in g:
+        print(os.getenv('DB_URL'))
         if os.getenv('DB_URL'):
             g.db = psycopg2.connect(
                 os.getenv('DB_URL'),

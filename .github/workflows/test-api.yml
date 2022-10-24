@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 env:
-  DB_URL: "postgres://postgres:postgres@postgres:5432/simple_todo_app_test"
+  DB_URL: "postgres://postgres:postgres@localhost:5432/simple_todo_app_test"
 
 jobs:
   test:
@@ -24,6 +24,7 @@ jobs:
         # service environment variables
         # `POSTGRES_HOST` is `postgres`
         env:
+          POSTGRES_HOST: localhost
           # optional (defaults to `postgres`)
           POSTGRES_DB: simple_todo_app_test
           # required
