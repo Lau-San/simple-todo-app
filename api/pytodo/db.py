@@ -26,6 +26,7 @@ def get_db():
     return g.db
 
 
+# skipcq: PYL-W0613
 def close_db(e=None):
     db = g.pop('db', None)
 
