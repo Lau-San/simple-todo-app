@@ -1,12 +1,8 @@
 from flask.testing import FlaskClient
-from werkzeug.wrappers import response
 
 
-def test_get_all_tasks(client: FlaskClient):
-    response = client.get(
-        '/api/tasks',
-        # json={}
-    )
+def test_get_users_tasks_ok(client: FlaskClient):
+    response = client.get('/api/users/1/tasks')
 
     assert response.status_code == 200
     assert response.json == [
@@ -21,11 +17,13 @@ def test_get_all_tasks(client: FlaskClient):
             'userId': 1,
             'title': 'Test task 2',
             'isCompleted': True
-        },
-        {
-            'id': 3,
-            'userId': 2,
-            'title': 'Another test task',
-            'isCompleted': False
         }
     ]
+
+
+def test_get_users_tasks_not_found(client: FlaskClient):
+    response = client.get('/api/users/20/tasks')
+    assert response.status_code == 404
+
+    assert response.json is not None
+    assert response.json['message'] == "User doesn't exist"

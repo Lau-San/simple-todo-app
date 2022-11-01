@@ -1,12 +1,15 @@
 from typing import Union, Any
 from flask import Blueprint, jsonify, request, make_response
 from .db import get_db
+from .utils import get_user_data, query_result_to_tasks
 
 bp = Blueprint('users', __name__, url_prefix='/users')
 
 
 @bp.route('/', methods=('GET',))
 def get_all_users():
+    """Get a list of all users."""
+
     db = get_db()
     with db.cursor() as cur:
         cur.execute('SELECT * FROM users;')
@@ -27,6 +30,8 @@ def get_all_users():
 
 @bp.route('/new', methods=('POST',))
 def add_user():
+    """Add a new user to the database."""
+
     response = make_response()
 
     # Get json data from request
@@ -74,11 +79,11 @@ def add_user():
     return response
 
 
-@bp.route('/<int:user_id>')
-def get_user_by_id(user_id: int):
-    exists, user = get_user_data(user_id)
+@bp.route('/<int:user_id>', methods=('GET',))
+def get_user(user_id: int):
+    user_exists, user = get_user_data(user_id)
 
-    if not exists:
+    if not user_exists:
         response = jsonify({
             'message': "User doesn't exist"
         })
@@ -89,21 +94,22 @@ def get_user_by_id(user_id: int):
     return response
 
 
-def get_user_data(id: int) -> tuple[bool, Union[dict[str, Any], Any]]:
-    """Retrieve the user with the given id if it exists."""
+@bp.route('/<int:user_id>/tasks', methods=('GET',))
+def get_user_tasks(user_id: int):
+    user_exists, _ = get_user_data(user_id)
+
+    if not user_exists:
+        response = jsonify({
+            'message': "User doesn't exist"
+        })
+        response.status_code = 404
+        return response
 
     db = get_db()
     with db.cursor() as cur:
-        cur.execute('SELECT * FROM users WHERE id = %s', (id,))
-        search = cur.fetchone()
+        cur.execute('SELECT * FROM tasks WHERE user_id = %s', (user_id,))
+        search = cur.fetchall()
 
-    if not search:
-        return (False, None)
-
-    user = {
-        'id': search[0],
-        'username': search[1],
-        'password': search[2]
-    }
-
-    return (True, user)
+    tasks = query_result_to_tasks(search)
+    response = jsonify(tasks)
+    return response
