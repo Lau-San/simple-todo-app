@@ -1,5 +1,5 @@
 from typing import Any
-from flask import jsonify, Blueprint, request
+from flask import jsonify, Blueprint
 from .db import get_db
 from .utils import query_result_to_tasks
 
