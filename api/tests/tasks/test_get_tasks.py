@@ -5,7 +5,6 @@ from werkzeug.wrappers import response
 def test_get_all_tasks(client: FlaskClient):
     response = client.get(
         '/api/tasks',
-        # json={}
     )
 
     assert response.status_code == 200
