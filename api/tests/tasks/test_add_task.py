@@ -38,7 +38,8 @@ def test_add_task_wrong_content_type(client: FlaskClient):
     response = client.post('/api/tasks/new')
     assert response.status_code == 400
     assert response.json is not None
-    assert response.json['message'] == 'Wrong content type'
+    assert response.json['message'] == \
+        'Wrong content type. Expected application/json'
 
 
 def test_add_task_no_data(client: FlaskClient):
