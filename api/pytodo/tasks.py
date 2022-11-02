@@ -22,7 +22,10 @@ def get_all_tasks():
 def add_task():
     # Check that data type is correct
     if request.content_type != 'application/json':
-        return new_error_response(400, 'Wrong content type')
+        return new_error_response(
+            400,
+            'Wrong content type. Expected application/json'
+        )
 
     # Check that data exists or is not empty
     try:
