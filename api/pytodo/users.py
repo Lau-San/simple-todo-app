@@ -30,12 +30,19 @@ def get_all_users():
 def add_user():
     """Add a new user to the database."""
 
+    # Check that data type is correct
+    if request.content_type != 'application/json':
+        return new_error_response(
+            400,
+            'Wrong content type. Expected application/json'
+        )
+
     # Get json data from request
     new_user_data = request.get_json()
 
     # Check that data is not empty
     if not new_user_data:
-        return new_error_response(400, 'No user data')
+        return new_error_response(400, 'No user data to add')
 
     # Check that data has username and password
     if 'username' not in new_user_data:
