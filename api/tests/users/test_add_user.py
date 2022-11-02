@@ -20,48 +20,13 @@ def test_add_user_ok(client: FlaskClient, app: Flask):
         assert search
 
 
-def test_add_user_incomplete_data(client: FlaskClient, app: Flask):
-    # No password
+def test_add_user_wrong_content_type(client: FlaskClient):
+    response = client.post('/api/users/new')
 
-    response = client.post(
-        '/api/users/new',
-        json={'username': 'no password'}
-    )
     assert response.status_code == 400
-
-    if response.json:
-        assert 'Not enough' in response.json['message']
-
-    with app.app_context():
-        db = get_db()
-        cur = db.cursor()
-        cur.execute(
-            'SELECT * FROM users WHERE username = %s',
-            ('no password',)
-        )
-        search = cur.fetchall()
-        assert not search
-
-    # No username
-
-    response = client.post(
-        '/api/users/new',
-        json={'password': 'Don\'t add me'}
-    )
-    assert response.status_code == 400
-
-    if response.json:
-        assert 'Not enough' in response.json['message']
-
-    with app.app_context():
-        db = get_db()
-        cur = db.cursor()
-        cur.execute(
-            'SELECT * FROM users WHERE password = %s',
-            ('Don\'t add me',)
-        )
-        search = cur.fetchall()
-        assert not search
+    assert response.json is not None
+    assert response.json['message'] == \
+        'Wrong content type. Expected application/json'
 
 
 def test_add_user_no_data(client: FlaskClient, app: Flask):
@@ -69,7 +34,29 @@ def test_add_user_no_data(client: FlaskClient, app: Flask):
         '/api/users/new',
         json={}
     )
-    assert response.status_code == 400
 
-    if response.json:
-        assert 'No user' in response.json['message']
+    assert response.status_code == 400
+    assert response.json is not None
+    assert response.json['message'] == 'No user data to add'
+
+
+def test_add_user_no_username(client: FlaskClient):
+    response = client.post(
+        '/api/users/new',
+        json={'username': 'no password'}
+    )
+
+    assert response.status_code == 400
+    assert response.json is not None
+    assert response.json['message'] == 'No password was provided for new user'
+
+
+def test_add_user_no_password(client: FlaskClient):
+    response = client.post(
+        '/api/users/new',
+        json={'password': 'Don\'t add me'}
+    )
+
+    assert response.status_code == 400
+    assert response.json is not None
+    assert response.json['message'] == 'No username was provided for new user'
