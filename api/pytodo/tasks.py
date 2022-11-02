@@ -1,5 +1,6 @@
 from typing import Any
 from flask import jsonify, Blueprint, request, make_response
+from werkzeug.exceptions import BadRequest
 from .db import get_db
 from .utils import query_result_to_tasks, new_error_response, get_user_data
 
@@ -31,7 +32,7 @@ def add_task():
     try:
         new_task_data: Any
         new_task_data = request.get_json()
-    except Exception:
+    except BadRequest:
         return new_error_response(400, 'No task data to add')
 
     # Check that all needed data was provided
