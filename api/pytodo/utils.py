@@ -1,4 +1,6 @@
 from typing import Union, Any
+import flask
+from flask import jsonify
 from .db import get_db
 
 
@@ -37,3 +39,11 @@ def get_user_data(id: int) -> tuple[bool, Union[dict[str, Any], Any]]:
     }
 
     return (True, user)
+
+
+def new_error_response(code: int, message: str) -> flask.Response:
+    response = jsonify({
+        'message': message
+    })
+    response.status_code = code
+    return response
