@@ -1,5 +1,6 @@
 from typing import Union, Any
 from flask import Blueprint, jsonify, request, make_response
+from psycopg2.errors import UniqueViolation
 from .db import get_db
 from .utils import get_user_data, query_result_to_tasks, new_error_response
 
@@ -52,20 +53,14 @@ def add_user():
 
     db = get_db()
     with db.cursor() as cur:
+        try:
+            cur.execute(
+                'INSERT INTO users (username, password) VALUES (%s, %s)',
+                (new_user_data['username'], new_user_data['password'])
+            )
+        except UniqueViolation:
+            return new_error_response(404, 'User already exists')
 
-        # Check if user is already in database
-        cur.execute(
-            'SELECT id FROM users WHERE username = %s',
-            (new_user_data['username'],)
-        )
-        if cur.fetchall():
-            return new_error_response(400, 'User already exists')
-
-        # Add user
-        cur.execute(
-            'INSERT INTO users (username, password) VALUES (%s, %s)',
-            (new_user_data['username'], new_user_data['password'])
-        )
         db.commit()
 
     return make_response()
