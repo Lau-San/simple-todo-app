@@ -60,3 +60,17 @@ def test_add_user_no_password(client: FlaskClient):
     assert response.status_code == 400
     assert response.json is not None
     assert response.json['message'] == 'No username was provided for new user'
+
+
+def test_add_user_already_exists(client: FlaskClient):
+    response = client.post(
+        '/api/users/new',
+        json={
+            'username': 'test',
+            'password': 'Already exists'
+        }
+    )
+
+    assert response.status_code == 404
+    assert response.json is not None
+    assert response.json['message'] == 'User already exists'
